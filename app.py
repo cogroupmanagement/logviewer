@@ -108,8 +108,13 @@ async def get_logs_file(request, key):
 
 
 if __name__ == "__main__":
-    app.run(
-        host=os.getenv("HOST", "0.0.0.0"),
-        port=os.getenv("PORT", 8000),
-        debug=bool(os.getenv("DEBUG", False)),
-    )
+    try:
+        app.run(
+            host=os.getenv("HOST", "0.0.0.0"),
+            port=int(os.getenv("PORT", 8000)),  # Ensure this is an integer
+            debug=os.getenv("DEBUG", "False").lower() in ("true", "1", "yes"),  # Convert DEBUG to boolean
+        )
+    except ValueError as e:
+        print(f"Invalid port number: {e}")
+    except Exception as e:
+        print(f"An error occurred while starting the server: {e}")
